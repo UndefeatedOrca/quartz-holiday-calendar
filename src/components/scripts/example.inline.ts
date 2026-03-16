@@ -39,10 +39,8 @@ function getCurrentSlug() {
 // Helper: Fetch content index (commonly needed for search, graph, explorer)
 async function _fetchContentIndex() {
   try {
-    const response = await fetch("/static/contentIndex.json");
-    const data = await response.json();
-    // Handle both formats: { "slug": {...} } or { "content": { "slug": {...} } }
-    return data.content || data;
+    const data = await fetchData;
+    return data;
   } catch (error) {
     console.error("[Plugin] Error fetching content index:", error);
     return null;

@@ -1,21 +1,11 @@
-interface CustomEventMap {
-  nav: CustomEvent<{ url: string }>;
-  prenav: CustomEvent<undefined>;
-  themechange: CustomEvent<{ theme: "light" | "dark" }>;
+/// <reference path="../node_modules/@quartz-community/types/globals.d.ts" />
+
+declare module "*.scss" {
+  const content: string;
+  export default content;
 }
 
-interface Document {
-  addEventListener<K extends keyof CustomEventMap>(
-    type: K,
-    listener: (this: Document, ev: CustomEventMap[K]) => void,
-  ): void;
-  removeEventListener<K extends keyof CustomEventMap>(
-    type: K,
-    listener: (this: Document, ev: CustomEventMap[K]) => void,
-  ): void;
-  dispatchEvent<K extends keyof CustomEventMap>(ev: CustomEventMap[K] | UIEvent): void;
-}
-
-interface Window {
-  addCleanup(fn: (...args: unknown[]) => void): void;
+declare module "*.inline.ts" {
+  const content: string;
+  export default content;
 }

@@ -1,35 +1,32 @@
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import { findAndReplace } from "mdast-util-find-and-replace";
-import { visit } from "unist-util-visit";
-import path from "path";
-import fs from "fs/promises";
-import { jsx } from "preact/jsx-runtime";
+import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
+import { findAndReplace } from 'mdast-util-find-and-replace';
+import { visit } from 'unist-util-visit';
+import path from 'path';
+import fs from 'fs/promises';
+import { jsx } from 'preact/jsx-runtime';
 
 // src/transformer.ts
 var defaultOptions = {
   highlightToken: "==",
   headingClass: "example-plugin-heading",
   enableGfm: true,
-  addHeadingSlugs: true,
+  addHeadingSlugs: true
 };
 var escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 var remarkHighlightToken = (token) => {
   const escapedToken = escapeRegExp(token);
-  const pattern = new RegExp(
-    `${escapedToken}([^
-]+?)${escapedToken}`,
-    "g",
-  );
+  const pattern = new RegExp(`${escapedToken}([^
+]+?)${escapedToken}`, "g");
   return () => (tree, _file) => {
     findAndReplace(tree, [
       [
         pattern,
         (_match, value) => ({
           type: "strong",
-          children: [{ type: "text", value }],
-        }),
-      ],
+          children: [{ type: "text", value }]
+        })
+      ]
     ]);
   };
 };
@@ -40,14 +37,10 @@ var rehypeHeadingClass = (className) => {
         return;
       }
       const existing = node.properties?.className;
-      const classes = Array.isArray(existing)
-        ? existing.filter((value) => typeof value === "string")
-        : typeof existing === "string"
-          ? [existing]
-          : [];
+      const classes = Array.isArray(existing) ? existing.filter((value) => typeof value === "string") : typeof existing === "string" ? [existing] : [];
       node.properties = {
         ...node.properties,
-        className: [...classes, className],
+        className: [...classes, className]
       };
     });
   };
@@ -57,9 +50,7 @@ var ExampleTransformer = (userOptions) => {
   return {
     name: "ExampleTransformer",
     textTransform(_ctx, src) {
-      return src.endsWith("\n")
-        ? src
-        : `${src}
+      return src.endsWith("\n") ? src : `${src}
 `;
     },
     markdownPlugins() {
@@ -81,19 +72,19 @@ var ExampleTransformer = (userOptions) => {
         css: [
           {
             content: `.${options.headingClass} { letter-spacing: 0.02em; }`,
-            inline: true,
-          },
+            inline: true
+          }
         ],
         js: [
           {
             contentType: "inline",
             loadTime: "afterDOMReady",
-            script: "document.documentElement.dataset.exampleTransformer = 'true'",
-          },
+            script: "document.documentElement.dataset.exampleTransformer = 'true'"
+          }
         ],
-        additionalHead: [],
+        additionalHead: []
       };
-    },
+    }
   };
 };
 
@@ -101,9 +92,9 @@ var ExampleTransformer = (userOptions) => {
 var defaultOptions2 = {
   allowDrafts: false,
   excludeTags: ["private"],
-  excludePathPrefixes: ["_drafts/", "_private/"],
+  excludePathPrefixes: ["_drafts/", "_private/"]
 };
-var normalizeTag = (tag) => (typeof tag === "string" ? tag.trim().toLowerCase() : "");
+var normalizeTag = (tag) => typeof tag === "string" ? tag.trim().toLowerCase() : "";
 var includesTag = (tags, excludedTags) => {
   if (!Array.isArray(tags)) {
     return false;
@@ -130,21 +121,17 @@ var ExampleFilter = (userOptions) => {
         return false;
       }
       return true;
-    },
+    }
   };
 };
 var defaultOptions3 = {
   manifestSlug: "plugin-manifest",
   includeFrontmatter: true,
   metadata: {
-    generator: "Quartz Plugin Template",
-  },
+    generator: "Quartz Plugin Template"
+  }
 };
-var joinSegments = (...segments) =>
-  segments
-    .filter((segment) => segment.length > 0)
-    .join("/")
-    .replace(/\/+/g, "/");
+var joinSegments = (...segments) => segments.filter((segment) => segment.length > 0).join("/").replace(/\/+/g, "/");
 var writeFile = async (outputDir, slug, ext, content) => {
   const outputPath = joinSegments(outputDir, `${slug}${ext}`);
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
@@ -156,7 +143,7 @@ var ExampleEmitter = (userOptions) => {
   const emitManifest = async (ctx, content) => {
     const manifest = {
       ...options.metadata,
-      generatedAt: /* @__PURE__ */ new Date().toISOString(),
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
       pages: content.map(([_tree, vfile]) => {
         const frontmatter = vfile.data?.frontmatter ?? {};
         return {
@@ -164,16 +151,21 @@ var ExampleEmitter = (userOptions) => {
           title: frontmatter.title ?? null,
           tags: frontmatter.tags ?? null,
           filePath: vfile.data?.filePath ?? null,
-          frontmatter: options.includeFrontmatter ? frontmatter : void 0,
+          frontmatter: options.includeFrontmatter ? frontmatter : void 0
         };
-      }),
+      })
     };
     let json = `${JSON.stringify(manifest, null, 2)}
 `;
     if (options.transformManifest) {
       json = options.transformManifest(json);
     }
-    const output = await writeFile(ctx.argv.output, options.manifestSlug, ".json", json);
+    const output = await writeFile(
+      ctx.argv.output,
+      options.manifestSlug,
+      ".json",
+      json
+    );
     return [output];
   };
   return {
@@ -186,7 +178,7 @@ var ExampleEmitter = (userOptions) => {
       for (const outputPath of outputPaths) {
         yield outputPath;
       }
-    },
+    }
   };
 };
 
@@ -196,13 +188,11 @@ function classNames(...classes) {
 }
 
 // src/components/styles/example.scss
-var example_default =
-  ".example-component {\n  padding: 8px 16px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border-radius: 4px;\n  font-weight: 600;\n  display: inline-block;\n}";
+var example_default = ".example-component {\n  padding: 8px 16px;\n  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  color: white;\n  border-radius: 4px;\n  font-weight: 600;\n  display: inline-block;\n}";
 
 // src/components/scripts/example.inline.ts
-var example_inline_default =
-  'function c(){let e=window.location.pathname;return e.startsWith("/")&&(e=e.slice(1)),e.endsWith("/")&&(e=e.slice(0,-1)),e||"index"}function r(){let e=document.querySelectorAll(".example-component");if(e.length===0)return;let t=[];function o(n){(n.ctrlKey||n.metaKey)&&n.shiftKey&&n.key.toLowerCase()==="e"&&(n.preventDefault(),console.log("[ExampleComponent] Keyboard shortcut triggered!"))}document.addEventListener("keydown",o),t.push(()=>document.removeEventListener("keydown",o));for(let n of e){let i=()=>{console.log("[ExampleComponent] Clicked!")};n.addEventListener("click",i),t.push(()=>n.removeEventListener("click",i))}typeof window<"u"&&window.addCleanup&&window.addCleanup(()=>{t.forEach(n=>n())}),console.log("[ExampleComponent] Initialized with",e.length,"component(s)")}document.addEventListener("nav",e=>{let t=e.detail?.url||c();console.log("[ExampleComponent] Navigation to:",t),r()});document.addEventListener("render",()=>{console.log("[ExampleComponent] Render event - re-initializing"),r()});document.addEventListener("prenav",()=>{let e=document.querySelector(".example-component");e&&sessionStorage.setItem("exampleScrollTop",e.scrollTop?.toString()||"0")});\n';
-var ExampleComponent_default = (opts) => {
+var example_inline_default = 'function l(){let e=window.location.pathname;return e.startsWith("/")&&(e=e.slice(1)),e.endsWith("/")&&(e=e.slice(0,-1)),e||"index"}function r(){let e=document.querySelectorAll(".example-component");if(e.length===0)return;let t=[];function o(n){(n.ctrlKey||n.metaKey)&&n.shiftKey&&n.key.toLowerCase()==="e"&&(n.preventDefault(),console.log("[ExampleComponent] Keyboard shortcut triggered!"))}document.addEventListener("keydown",o),t.push(()=>document.removeEventListener("keydown",o));for(let n of e){let i=()=>{console.log("[ExampleComponent] Clicked!")};n.addEventListener("click",i),t.push(()=>n.removeEventListener("click",i))}typeof window<"u"&&window.addCleanup&&window.addCleanup(()=>{t.forEach(n=>n())}),console.log("[ExampleComponent] Initialized with",e.length,"component(s)")}document.addEventListener("nav",e=>{let t=e.detail?.url||l();console.log("[ExampleComponent] Navigation to:",t),r()});document.addEventListener("render",()=>{console.log("[ExampleComponent] Render event - re-initializing"),r()});document.addEventListener("prenav",()=>{let e=document.querySelector(".example-component");e&&sessionStorage.setItem("exampleScrollTop",e.scrollTop?.toString()||"0")});\n';
+var ExampleComponent_default = ((opts) => {
   const { prefix = "", suffix = "", className = "example-component" } = opts ?? {};
   const Component = (props) => {
     const frontmatter = props.fileData?.frontmatter;
@@ -213,13 +203,8 @@ var ExampleComponent_default = (opts) => {
   Component.css = example_default;
   Component.afterDOMLoaded = example_inline_default;
   return Component;
-};
+});
 
-export {
-  ExampleComponent_default as ExampleComponent,
-  ExampleEmitter,
-  ExampleFilter,
-  ExampleTransformer,
-};
+export { ExampleComponent_default as ExampleComponent, ExampleEmitter, ExampleFilter, ExampleTransformer };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

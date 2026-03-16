@@ -241,7 +241,7 @@ Component scripts run in the browser and must handle Quartz's SPA navigation. Ke
 2. **Listen to `nav` event** - Fires after each page navigation (including initial load)
 3. **Listen to `prenav` event** - Fires before navigation, use for saving state
 4. **Use `window.addCleanup()`** - Register cleanup functions for event listeners
-5. **Fetch `/static/contentIndex.json`** - Access page metadata for search, graph, etc.
+5. **Use `fetchData` global** - Access page metadata via the `fetchData` promise (handles base path correctly)
 
 See `src/components/scripts/example.inline.ts` for a complete example with all patterns.
 
@@ -283,9 +283,8 @@ When migrating a v4 component to a standalone plugin:
 1. **Replace Quartz imports** with `@quartz-community/types`
 2. **Copy utility functions** (path helpers, DOM utils) into your plugin
 3. **Use `@ts-nocheck`** for inline scripts that can't be type-checked
-4. **Fetch data directly** from `/static/contentIndex.json` instead of using `fetchData`
-5. **Handle both data formats**: `data.content || data` for contentIndex compatibility
-6. **Test with both local and production builds**
+4. **Use the `fetchData` global** to access `contentIndex.json` with the correct base path
+5. **Test with both local and production builds**
 
 ## License
 

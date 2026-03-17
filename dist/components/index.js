@@ -1,4 +1,7 @@
+import { createRequire } from 'module';
 import { jsx } from 'preact/jsx-runtime';
+
+createRequire(import.meta.url);
 
 // src/util/lang.ts
 function classNames(...classes) {

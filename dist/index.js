@@ -1,6 +1,9 @@
+import { createRequire } from 'module';
 import path2 from 'path';
 import fs from 'fs/promises';
 import { jsx } from 'preact/jsx-runtime';
+
+createRequire(import.meta.url);
 
 // node_modules/ccount/index.js
 function ccount(value, character) {

@@ -24,11 +24,11 @@ const inlineScriptPlugin: Plugin = {
   setup(parentBuild) {
     const absWorkingDir = parentBuild.initialOptions.absWorkingDir ?? process.cwd();
 
-    // SCSS files are compiled to CSS via sass, matching Quartz v5 core behavior
-    parentBuild.onLoad({ filter: /\.scss$/ }, async (args) => {
-      const sass = await import("sass");
-      const result = sass.compile(args.path);
-      return { contents: result.css, loader: "text" };
+    // CSS files are loaded as text strings for component .css properties
+    parentBuild.onLoad({ filter: /\.css$/ }, async (args) => {
+      const fs = await import("fs");
+      const contents = await fs.promises.readFile(args.path, "utf8");
+      return { contents, loader: "text" };
     });
 
     // Inline TypeScript files are transpiled + bundled for the browser
@@ -93,8 +93,6 @@ const SINGLETON_EXTERNALS = [
 export default defineConfig({
   entry: {
     index: "src/index.ts",
-    types: "src/types.ts",
-    "components/index": "src/components/index.ts",
   },
   format: ["esm"],
   dts: true,

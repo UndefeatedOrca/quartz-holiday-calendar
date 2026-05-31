@@ -2,8 +2,6 @@
 
 import type { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "@quartz-community/types"
 import { resolveRelative } from "@quartz-community/utils/path"
-// @ts-ignore
-import style from "./HolidayCalendar.css?inline"
 
 interface HolidayCalendarOptions {
   showUpcomingDays?: number // How many days ahead to show
@@ -298,7 +296,45 @@ export default ((opts?: Partial<HolidayCalendarOptions>) => {
     )
   }
 
-  HolidayCalendar.css = style
+  HolidayCalendar.css = `
+.holiday-calendar {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.holiday-calendar-loading {
+  color: var(--gray);
+  font-style: italic;
+}
+
+.holiday-calendar-empty {
+  color: var(--gray);
+  font-style: italic;
+}
+
+.holiday-calendar-entry {
+  margin-bottom: 0.25rem;
+}
+
+.holiday-calendar h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.holiday-calendar h5 {
+  margin: 0 0 0.25rem 0;
+  color: var(--darkgray);
+}
+
+.holiday-calendar ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+`
 
   // ── Client-side script ──────────────────────────────────────────────────────
   // Quartz runs afterDOMLoaded scripts after every client-side navigation,

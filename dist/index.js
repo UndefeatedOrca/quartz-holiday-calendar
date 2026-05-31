@@ -51,9 +51,6 @@ function resolveRelative(current, target) {
   const res = joinSegments(pathToRoot(current), simplifySlug(target));
   return res;
 }
-
-// src/HolidayCalendar.css?inline
-var HolidayCalendar_default = {};
 var l;
 l = { __e: function(n2, l2, u3, t2) {
   for (var i2, o2, r2; l2 = l2.__; ) if ((i2 = l2.__c) && !i2.__) try {
@@ -183,7 +180,7 @@ function calculateMovingHolidays(year) {
   holidays.set("d-day", new Date(year, 5, 6));
   return holidays;
 }
-var HolidayCalendar_default2 = ((opts) => {
+var HolidayCalendar_default = ((opts) => {
   const options = { ...defaultOptions, ...opts };
   const HolidayCalendar = (props) => {
     const { allFiles, fileData } = props;
@@ -268,7 +265,45 @@ var HolidayCalendar_default2 = ((opts) => {
       }
     );
   };
-  HolidayCalendar.css = HolidayCalendar_default;
+  HolidayCalendar.css = `
+.holiday-calendar {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+.holiday-calendar-loading {
+  color: var(--gray);
+  font-style: italic;
+}
+
+.holiday-calendar-empty {
+  color: var(--gray);
+  font-style: italic;
+}
+
+.holiday-calendar-entry {
+  margin-bottom: 0.25rem;
+}
+
+.holiday-calendar h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.holiday-calendar h5 {
+  margin: 0 0 0.25rem 0;
+  color: var(--darkgray);
+}
+
+.holiday-calendar ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+`;
   HolidayCalendar.afterDOMLoaded = `
     (function () {
       function formatHolidayName(name) {
@@ -361,6 +396,6 @@ var HolidayCalendar_default2 = ((opts) => {
   return HolidayCalendar;
 });
 
-export { HolidayCalendar_default2 as HolidayCalendar };
+export { HolidayCalendar_default as HolidayCalendar };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

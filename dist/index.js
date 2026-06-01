@@ -394,10 +394,13 @@ var HolidayCalendar_default = ((opts) => {
         document.querySelectorAll(".holiday-calendar[data-holiday-entries]").forEach(render)
       }
 
+      function renderAll() {
+        document.querySelectorAll(".holiday-calendar[data-holiday-entries]").forEach(render)
+      }
+
       renderAll()
-      window.addCleanup(() => {
-        document.addEventListener("nav", renderAll)
-      })
+      document.addEventListener("nav", renderAll)
+      window.addCleanup(() => document.removeEventListener("nav", renderAll))
     })()
   `;
   return HolidayCalendar;

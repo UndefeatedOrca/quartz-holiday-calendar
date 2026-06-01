@@ -436,7 +436,6 @@ export default ((opts?: Partial<HolidayCalendarOptions>) => {
 
       renderAll()
       document.addEventListener("nav", renderAll)
-      window.addCleanup(() => document.removeEventListener("nav", renderAll))
     })()
   `
 

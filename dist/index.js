@@ -400,7 +400,6 @@ var HolidayCalendar_default = ((opts) => {
 
       renderAll()
       document.addEventListener("nav", renderAll)
-      window.addCleanup(() => document.removeEventListener("nav", renderAll))
     })()
   `;
   return HolidayCalendar;

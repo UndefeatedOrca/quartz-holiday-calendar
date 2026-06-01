@@ -426,7 +426,14 @@ export default ((opts?: Partial<HolidayCalendarOptions>) => {
         container.innerHTML = html
       }
 
-      document.querySelectorAll(".holiday-calendar[data-holiday-entries]").forEach(render)
+      function renderAll() {
+        document.querySelectorAll(".holiday-calendar[data-holiday-entries]").forEach(render)
+      }
+
+      renderAll()
+      window.addCleanup(() => {
+        document.addEventListener("nav", renderAll)
+      })
     })()
   `
 
